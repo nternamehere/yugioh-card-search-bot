@@ -37,8 +37,9 @@ module.exports = {
         await interaction.deferReply();
         const cardName = interaction.options.getString('card');
         try {
-            const { data: { data } } = await get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(cardName)}`);
-            const card = data[0];
+            const res = await get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(cardName)}`);
+            const { data: { data: cards } } = res;
+            const card = cards[0];
             await interaction.editReply({ embeds: [cardEmbed(card)] });
         } catch (err) {
             if ((/no card/i).test(err?.response?.data?.error)) return await interaction.editReply(`Card not found in database: ${cardName}`);
